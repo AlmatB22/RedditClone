@@ -8,12 +8,16 @@ import { Post }from '../types';
 import { Link } from 'expo-router';
 
 type PostListItem = {
-    post: Post
+    post: Post,
+    detailedPost?: Boolean
 }
 
-export default function PostListItem({ post }: PostListItem) {
+export default function PostListItem({ post, detailedPost }: PostListItem) {
+    const shouldShowImage = detailedPost || post.image;
+    const shouldShowDescription = detailedPost || !post.image;
+    
     return (
-        <Link href={`/post/${post.id}`} asChild>
+        <Link href={`/post/${post.id}`}>
             <View style={{paddingHorizontal: 17, paddingVertical: 10, gap: 7, borderBottomColor: 'lightgrey', borderBottomWidth: 0.5, backgroundColor: 'white'}}>
                 <View style={{display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center'}}>
                     <Image source={{uri: post.group.image}} style={styles.image}/>
@@ -25,7 +29,7 @@ export default function PostListItem({ post }: PostListItem) {
                 </View>
 
                 <Text style={styles.title}>{post.title}</Text>
-                {post.image && 
+                {shouldShowImage && post.image && 
                     <Image source={{uri: post.image}}
                         style={{
                             width: '100%', 
@@ -34,7 +38,7 @@ export default function PostListItem({ post }: PostListItem) {
                         }}
                     />
                 }
-                { (!post.image && post.description) &&
+                { (shouldShowDescription && post.description) &&
                     <Text numberOfLines={4}>{post.description}</Text>
                 }
 
