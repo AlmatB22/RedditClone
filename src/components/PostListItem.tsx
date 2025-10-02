@@ -5,6 +5,7 @@ import { formatDistanceToNowStrict, FormatDistanceToNowStrictOptions } from 'dat
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { Post }from '../types';
+import { Link } from 'expo-router';
 
 type PostListItem = {
     post: Post
@@ -12,53 +13,55 @@ type PostListItem = {
 
 export default function PostListItem({ post }: PostListItem) {
     return (
-        <View style={{paddingHorizontal: 17, paddingVertical: 10, gap: 7, borderBottomColor: 'lightgrey', borderBottomWidth: 0.5, backgroundColor: 'white'}}>
-            <View style={{display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center'}}>
-                <Image source={{uri: post.group.image}} style={styles.image}/>
-                <Text>{post.group.name}</Text>
-                <Text style={{color: 'grey'}}>{formatDistanceToNowStrict(new Date(post.created_at))}</Text>
-                <View style={{marginLeft: 'auto'}}>
-                    <Text style={styles.joinButtonText}>Join</Text>
+        <Link href={`/post/${post.id}`} asChild>
+            <View style={{paddingHorizontal: 17, paddingVertical: 10, gap: 7, borderBottomColor: 'lightgrey', borderBottomWidth: 0.5, backgroundColor: 'white'}}>
+                <View style={{display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center'}}>
+                    <Image source={{uri: post.group.image}} style={styles.image}/>
+                    <Text>{post.group.name}</Text>
+                    <Text style={{color: 'grey'}}>{formatDistanceToNowStrict(new Date(post.created_at))}</Text>
+                    <View style={{marginLeft: 'auto'}}>
+                        <Text style={styles.joinButtonText}>Join</Text>
+                    </View>
+                </View>
+
+                <Text style={styles.title}>{post.title}</Text>
+                {post.image && 
+                    <Image source={{uri: post.image}}
+                        style={{
+                            width: '100%', 
+                            aspectRatio: 4/3, 
+                            borderRadius: 15,
+                        }}
+                    />
+                }
+                { (!post.image && post.description) &&
+                    <Text numberOfLines={4}>{post.description}</Text>
+                }
+
+                {/* FOOTER */}
+                <View style={{flexDirection: 'row',  marginTop: 4}}>
+                    <View style={{flexDirection:'row', gap: 10}}>
+                        <View style={styles.iconBox}>
+                            <MaterialCommunityIcons name="arrow-up-bold-outline" size={19} color="black" />
+                            <Text style={{marginLeft: 5, fontWeight: '500'}}>{post.upvotes}</Text>
+                            <View style={styles.verticalLine}></View>
+                            <MaterialCommunityIcons name="arrow-down-bold-outline" size={19} color="black" />
+                        </View>
+                        <View style={styles.iconBox}>
+                            <MaterialCommunityIcons name="comment-outline" size={19} color="black" />
+                        </View>
+                    </View>
+                    <View style={{flexDirection: 'row', gap: 10, marginLeft: 'auto'}}>
+                        <View style={styles.iconBox}>
+                            <MaterialCommunityIcons name="trophy-outline" size={19} color="black" />
+                        </View>
+                        <View style={styles.iconBox}>
+                            <MaterialCommunityIcons name="share-outline" size={19} color="black" />
+                        </View>
+                    </View>
                 </View>
             </View>
-
-            <Text style={styles.title}>{post.title}</Text>
-            {post.image && 
-                <Image source={{uri: post.image}}
-                    style={{
-                        width: '100%', 
-                        aspectRatio: 4/3, 
-                        borderRadius: 15,
-                    }}
-                />
-            }
-            { (!post.image && post.description) &&
-                <Text numberOfLines={4}>{post.description}</Text>
-            }
-
-            {/* FOOTER */}
-            <View style={{flexDirection: 'row',  marginTop: 4}}>
-                <View style={{flexDirection:'row', gap: 10}}>
-                    <View style={styles.iconBox}>
-                        <MaterialCommunityIcons name="arrow-up-bold-outline" size={19} color="black" />
-                        <Text style={{marginLeft: 5, fontWeight: '500'}}>{post.upvotes}</Text>
-                        <View style={styles.verticalLine}></View>
-                        <MaterialCommunityIcons name="arrow-down-bold-outline" size={19} color="black" />
-                    </View>
-                    <View style={styles.iconBox}>
-                        <MaterialCommunityIcons name="comment-outline" size={19} color="black" />
-                    </View>
-                </View>
-                <View style={{flexDirection: 'row', gap: 10, marginLeft: 'auto'}}>
-                    <View style={styles.iconBox}>
-                        <MaterialCommunityIcons name="trophy-outline" size={19} color="black" />
-                    </View>
-                    <View style={styles.iconBox}>
-                        <MaterialCommunityIcons name="share-outline" size={19} color="black" />
-                    </View>
-                </View>
-            </View>
-        </View>
+        </Link>
     )
 }
 
